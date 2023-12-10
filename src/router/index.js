@@ -1,15 +1,25 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import {
+  createRouter,
+  createWebHashHistory
+} from 'vue-router'
 
-const routes = [
-  {
+const routes = [{
+  path: '/',
+  component: () => import('@/views/Layout'),
+  children: [{
     path: '/',
-    component: () => import('@/views/Layout'),
-    children: [{
-      path: '/',
-      component: () => import('@/views/Home')
-    }]
+    component: () => import('@/views/Home')
+  },
+  {
+    path: '/category/:id',
+    component: () => import('@/views/Category/index.vue')
+  },
+  {
+    path: '/category/sub/:id',
+    component: () => import('@/views/Category/subCate.vue')
   }
-]
+  ]
+}]
 
 const router = createRouter({
   history: createWebHashHistory(),
