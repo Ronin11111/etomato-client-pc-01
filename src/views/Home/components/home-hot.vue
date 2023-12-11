@@ -1,5 +1,5 @@
 <template>
-  <div class="home-hot">
+  <div ref="target" class="home-hot">
     <HomePanel title="人气推荐" sub-title="人气爆款 不容错过">
       <div style="position: relative; height: 426px">
         <Transition class="fade">
@@ -23,7 +23,7 @@
 import HomePanel from './home-panel.vue'
 import { getHot } from '@/api/home.js'
 import HomeSkeleton from './home-skeleton.vue'
-import { ref } from 'vue'
+import { lazyData } from '@/hock/main.js'
 
 export default {
   name: 'HomeHot',
@@ -32,11 +32,8 @@ export default {
     HomeSkeleton
   },
   setup () {
-    const goods = ref([])
-    getHot().then((data) => {
-      goods.value = data.result
-    })
-    return { goods }
+    const { result, target } = lazyData(getHot)
+    return { goods: result, target }
   }
 }
 </script>

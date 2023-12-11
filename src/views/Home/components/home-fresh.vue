@@ -1,5 +1,5 @@
 <template>
-  <div class="home-fresh">
+  <div ref="target" class="home-fresh">
     <HomePanel title="新鲜好物" subTitle="新鲜出炉 品质靠谱">
       <template #right>
         <XtxMore></XtxMore>
@@ -26,7 +26,7 @@
 import HomePanel from './home-panel.vue'
 import HomeSkeleton from './home-skeleton.vue'
 import { getGoods } from '@/api/home.js'
-import { ref } from 'vue'
+import { lazyData } from '@/hock/main.js'
 
 export default {
   name: 'HomeFresh',
@@ -35,11 +35,9 @@ export default {
     HomeSkeleton
   },
   setup () {
-    const goods = ref([])
-    getGoods().then((data) => {
-      goods.value = data.result
-    })
-    return { goods }
+    // 使用懒加载请求数据
+    const { result, target } = lazyData(getGoods)
+    return { goods: result, target }
   }
 }
 </script>
