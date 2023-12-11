@@ -1,4 +1,5 @@
 <template>
+  <!-- 骨架全局组件 -->
   <div class="xtx-skeleton" :style="{width,height}" :class="{shan:animated}">
     <!-- 1 盒子-->
     <div class="block" :style="{backgroundColor:bg}"></div>
