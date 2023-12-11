@@ -1,7 +1,12 @@
 <template>
-  <div class="home-category" @mouseleave="currentId=null">
+  <div class="home-category" @mouseleave="currentId = null">
     <ul class="menu">
-      <li :class="{active:currentId===item.id}" v-for="item in list" :key="item.id" @mouseenter="currentId = item.id">
+      <li
+        :class="{ active: currentId === item.id }"
+        v-for="item in list"
+        :key="item.id"
+        @mouseenter="currentId = item.id"
+      >
         <RouterLink to="`/category/${item.id}`">{{ item.name }}</RouterLink>
         <template v-if="item.children">
           <RouterLink
@@ -11,14 +16,28 @@
             >{{ sub.name }}</RouterLink
           >
         </template>
+        <span v-else>
+          <XtxSkeleton
+            class="xtx-skeleton"
+            width="60px"
+            height="18px"
+            style="margin-right: 5px"
+            bg="rgba(255,255,255,0.2)"
+          />
+          <XtxSkeleton class="xtx-skeleton" width="50px" height="18px" bg="rgba(255,255,255,0.2)" />
+        </span>
       </li>
     </ul>
     <!-- 弹层 -->
     <div class="layer">
-      <h4>{{currentGoods && currentGoods.id==='brand'?'品牌':'分类'}}推荐 <small>根据您的购买或浏览记录推荐</small></h4>
+      <h4>
+        {{ currentGoods && currentGoods.id === "brand" ? "品牌" : "分类" }}推荐
+        <small>根据您的购买或浏览记录推荐</small>
+      </h4>
       <!-- 商品推荐 -->
       <!-- 注意：先判断是否有数据 -->
-      <ul v-if="currentGoods && currentGoods.goods && currentGoods.goods.length"
+      <ul
+        v-if="currentGoods && currentGoods.goods && currentGoods.goods.length"
       >
         <li v-for="item in currentGoods.goods" :key="item.id">
           <RouterLink to="/">
@@ -32,7 +51,9 @@
         </li>
       </ul>
       <!-- 品牌推荐 -->
-      <ul v-if="currentGoods && currentGoods.brands && currentGoods.brands.length">
+      <ul
+        v-if="currentGoods && currentGoods.brands && currentGoods.brands.length"
+      >
         <li class="brand" v-for="sub in currentGoods.brands" :key="sub.id">
           <RouterLink to="/">
             <img :src="sub.picture" alt="" />
@@ -66,7 +87,7 @@ export default {
     })
     const store = useStore()
     const list = computed(() => {
-      return store.state.category.list.map((item) => {
+      const mulist = store.state.category.list.map(item => {
         // 手动取值
         return {
           name: item.name,
@@ -76,9 +97,10 @@ export default {
           goods: item.goods
         }
       })
+      // 将品牌对象追加至数组中
+      mulist.push(brand)
+      return mulist
     })
-    // 将品牌对象追加至数组中
-    list.value.push(brand)
 
     // 定义当前栏目Id
     const currentId = ref(null)
@@ -87,7 +109,7 @@ export default {
     })
 
     // 获取brand中的数据
-    getBrand().then(data => {
+    getBrand().then((data) => {
       brand.brands = data.result
     })
     return { list, currentId, currentGoods }
@@ -107,7 +129,8 @@ export default {
       padding-left: 40px;
       height: 50px;
       line-height: 50px;
-      &:hover,&.active {
+      &:hover,
+      &.active {
         background: @xtxColor;
       }
       a {
@@ -208,6 +231,17 @@ export default {
   &:hover {
     .layer {
       display: block;
+    }
+  }
+  .xtx-skeleton {
+    animation: fade 1s linear infinite alternate;
+  }
+  @keyframes fade {
+    from {
+      opacity: 0.2;
+    }
+    to {
+      opacity: 1;
     }
   }
 }
