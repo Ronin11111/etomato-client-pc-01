@@ -20,3 +20,8 @@ export const getGoods = () => {
 export const getHot = () => {
   return request('home/hot', 'get')
 }
+
+// 获取商品区块信息
+export const findGoods = () => {
+  return request('home/goods', 'get')
+}

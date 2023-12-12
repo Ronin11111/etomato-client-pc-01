@@ -18,6 +18,9 @@ export const lazyData = (api) => {
           result.value = data.result
         })
       }
+    }, {
+      // thresholdthreshold 容器和可视区交叉的占比
+      threshold: 0
     })
   // 返回观察的dom元素和请求的数据
   return { result, target }

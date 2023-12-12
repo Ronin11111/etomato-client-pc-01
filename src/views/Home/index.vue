@@ -12,6 +12,8 @@
       <HomeHot></HomeHot>
       <!-- 热门品牌 -->
       <HomeHotBrand></HomeHotBrand>
+      <!-- 商品区块 -->
+      <HomeProduct></HomeProduct>
     </div>
   </div>
 </template>
@@ -21,6 +23,7 @@ import HomeCategory from '@/views/Home/components/home-category.vue'
 import HomeBanner from '@/views/Home/components/home-carousel.vue'
 import HomeFresh from '@/views/Home/components/home-fresh.vue'
 import HomeHot from '@/views/Home/components/home-hot.vue'
+import HomeProduct from '@/views/Home/components/home-product.vue'
 import HomeHotBrand from '@/views/Home/components/home-hotbrand.vue'
 
 export default {
@@ -30,7 +33,8 @@ export default {
     HomeBanner,
     HomeFresh,
     HomeHot,
-    HomeHotBrand
+    HomeHotBrand,
+    HomeProduct
   }
 }
 </script>
