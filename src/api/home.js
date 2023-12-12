@@ -25,3 +25,8 @@ export const getHot = () => {
 export const findGoods = () => {
   return request('home/goods', 'get')
 }
+
+// 获取最新区块信息
+export const getSpecial = () => {
+  return request('home/special', 'get')
+}
