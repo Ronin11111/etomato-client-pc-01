@@ -14,7 +14,7 @@ export const lazyData = (api) => {
         // 1.停止观察
         stop()
         // 2.调用api，返回结果
-        api().then((data) => {
+        api().then(data => {
           result.value = data.result
         })
       }

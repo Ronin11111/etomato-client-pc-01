@@ -10,6 +10,8 @@
       <HomeFresh/>
       <!-- 热门好物 -->
       <HomeHot></HomeHot>
+      <!-- 热门品牌 -->
+      <HomeHotBrand></HomeHotBrand>
     </div>
   </div>
 </template>
@@ -19,6 +21,7 @@ import HomeCategory from '@/views/Home/components/home-category.vue'
 import HomeBanner from '@/views/Home/components/home-carousel.vue'
 import HomeFresh from '@/views/Home/components/home-fresh.vue'
 import HomeHot from '@/views/Home/components/home-hot.vue'
+import HomeHotBrand from '@/views/Home/components/home-hotbrand.vue'
 
 export default {
   name: 'home-page',
@@ -26,7 +29,8 @@ export default {
     HomeCategory,
     HomeBanner,
     HomeFresh,
-    HomeHot
+    HomeHot,
+    HomeHotBrand
   }
 }
 </script>

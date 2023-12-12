@@ -21,8 +21,8 @@
 
 <script>
 import HomePanel from './home-panel.vue'
-import { getHot } from '@/api/home.js'
 import HomeSkeleton from './home-skeleton.vue'
+import { getHot } from '@/api/home.js'
 import { lazyData } from '@/hock/main.js'
 
 export default {
