@@ -6,18 +6,10 @@ import {
 const routes = [{
   path: '/',
   component: () => import('@/views/Layout'),
-  children: [{
-    path: '/',
-    component: () => import('@/views/Home')
-  },
-  {
-    path: '/category/:id',
-    component: () => import('@/views/Category/index.vue')
-  },
-  {
-    path: '/category/sub/:id',
-    component: () => import('@/views/Category/subCate.vue')
-  }
+  children: [
+    { path: '/', component: () => import('@/views/Home/index') },
+    { path: '/category/:id', component: () => import('@/views/Category/index') },
+    { path: '/category/sub/:id', component: () => import('@/views/Category/subCate') }
   ]
 }]
 

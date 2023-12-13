@@ -5,9 +5,11 @@ export default {
   render () {
     const items = this.$slots.default()
     const dymanicItems = []
-    items.forEach((item, i) => {
+    items.forEach((item, index) => {
       dymanicItems.push(item)
-      if (i < (items.length - 1)) {
+      // 判断是否为最后一个元素
+      // 动态添加i标签
+      if (index < (items.length - 1)) {
         dymanicItems.push(h('i', { class: 'iconfont icon-angle-right' }))
       }
     })
