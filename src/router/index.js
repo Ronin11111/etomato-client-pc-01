@@ -15,7 +15,11 @@ const routes = [{
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
+  // 跳转路由时，页面滚动至相应位置
+  scrollBehavior () {
+    return { left: 0, top: 0 }
+  }
 })
 
 export default router

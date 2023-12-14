@@ -115,3 +115,19 @@
         }
       }
     }
+
+    // 面包屑的动画切换效果
+    fade-item-enter-from,
+    fade-item-leave-to{
+      transform: translateX(20px);
+      opacity: 0;
+    }
+    fade-item-enter-active,
+    fade-item-leave-active{
+      transition: all .5s;
+    }
+    fade-item-enter-to,
+    fade-item-leave-from{
+      transform: none;
+      opacity: 1;
+    }

@@ -4,7 +4,9 @@
       <!-- 面包屑 -->
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
-        <XtxBreadItem>{{ cateList.name }}</XtxBreadItem>
+        <Transition name="fade-item" mode="out-in">
+          <XtxBreadItem :key="cateList.id">{{ cateList.name }}</XtxBreadItem>
+        </Transition>
       </XtxBread>
       <!-- 轮播图 -->
       <XtxCarousel :list="sliders" autoPaly style="height:500px" />
@@ -76,7 +78,8 @@ export default {
     watch(
       () => route.params.id,
       (newVal) => {
-        newVal && getTopCateFn()
+        // 注意：当路由改变时，且为一级类目发送请求才触发发起请求
+        if (newVal && route.path === `/category/${newVal}`)getTopCateFn()
       },
       { immediate: true }
     )
