@@ -9,7 +9,8 @@ const routes = [{
   children: [
     { path: '/', component: () => import('@/views/Home/index') },
     { path: '/category/:id', component: () => import('@/views/Category/index') },
-    { path: '/category/sub/:id', component: () => import('@/views/Category/subCate') }
+    { path: '/category/sub/:id', component: () => import('@/views/Category/subCate') },
+    { path: '/product/:id', component: () => import('@/views/Goods/index') }
   ]
 }]
 
