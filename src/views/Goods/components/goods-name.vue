@@ -12,7 +12,7 @@
     </dl>
     <dl>
       <dt>配送</dt>
-      <dd>至 </dd>
+      <dd>至<XtxCitySelect :fullAddress="fullLocation" @changeDate="changeAddress"></XtxCitySelect> </dd>
     </dl>
     <dl>
       <dt>服务</dt>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 export default {
   name: 'GoodsName',
   props: {
@@ -34,6 +35,31 @@ export default {
       type: Object,
       default: () => {}
     }
+  },
+  setup (props) {
+    // 定义默认数据
+    const provinceCode = ref('110000')
+    const cityCode = ref('119900')
+    const countyCode = ref('110101')
+    const fullLocation = ref('北京市 市辖区 东城区')
+    if (props.goods.userAddresses) {
+      // 若登录，则将登录中的地址设为默认数据
+      const defaultAdress = props.goods.userAddresses.find(item => item.isDefault === 1)
+      if (defaultAdress) {
+        provinceCode.value = defaultAdress.provinceCode
+        cityCode.value = defaultAdress.cityCode
+        countyCode.value = defaultAdress.countyCode
+        fullLocation.value = defaultAdress.fullLocation
+      }
+    }
+    // 子传父函数
+    const changeAddress = (data) => {
+      provinceCode.value = data.provinceCode
+      cityCode.value = data.cityCode
+      countyCode.value = data.countyCode
+      fullLocation.value = data.fullLocation
+    }
+    return { fullLocation, changeAddress }
   }
 }
 </script>
