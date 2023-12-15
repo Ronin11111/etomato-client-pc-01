@@ -11,10 +11,14 @@
       <!-- 商品信息 -->
       <div class="goods-info">
         <div class="media">
-          <!-- 图片预览组件 -->
-          <GoodsImage :images="goods.mainPictures"></GoodsImage>
+          <GoodsImage :images="goods.mainPictures" />
+          <!-- 商品销售 -->
+          <GoodsSales />
         </div>
-        <div class="spec"></div>
+        <div class="spec">
+          <!-- 商品介绍 -->
+          <GoodsName :goods="goods"/>
+        </div>
       </div>
       <!-- 商品推荐 -->
       <GoodsRelevant/>
@@ -36,12 +40,15 @@
 <script>
 import GoodsRelevant from './components/goods-relevant'
 import GoodsImage from './components/goods-images.vue'
+import GoodsSales from './components/goods-sale'
+import GoodsName from './components/goods-name.vue'
+
 import { findGoods } from '@/api/product'
 import { watch, ref, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 export default {
   name: 'XtxGoodsPage',
-  components: { GoodsRelevant, GoodsImage },
+  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName },
   setup () {
     // 调用获取商品信息的函数
     const goods = getGoodsInfo()
