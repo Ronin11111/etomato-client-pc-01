@@ -14,3 +14,8 @@ export const getTopCategory = (id) => {
 export const getSubCategoryFilter = (id) => {
   return request('/category/sub/filter', 'get', { id })
 }
+
+// 获取分类下的商品（带筛选条件）
+export const getSubCategoryGoods = (params) => {
+  return request('/category/goods/temporary', 'post', params)
+}

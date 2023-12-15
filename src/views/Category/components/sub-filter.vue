@@ -3,13 +3,13 @@
     <div class="item">
       <div class="head">品牌：</div>
       <div class="body">
-        <a @click="filterData.selectedBrand=item.id" href="javascript:;" :class="{active:filterData.selectedBrand===item.id}" v-for="item in filterData.brands" :key="item.id">{{item.name}}</a>
+        <a @click="changeBrand(item.id)" href="javascript:;" :class="{active:filterData.selectedBrand===item.id}" v-for="item in filterData.brands" :key="item.id">{{item.name}}</a>
       </div>
     </div>
     <div class="item" v-for="item in filterData.saleProperties" :key="item.id">
       <div class="head">{{item.name}}：</div>
       <div class="body">
-        <a @click="item.selectedProp=prop.id" href="javascript:;" :class="{active:item.selectedProp===prop.id}" v-for="prop in item.properties" :key="prop.id">{{prop.name}}</a>
+        <a @click="changeAttr(item,prop.id)" href="javascript:;" :class="{active:item.selectedProp===prop.id}" v-for="prop in item.properties" :key="prop.id">{{prop.name}}</a>
       </div>
     </div>
   </div>
@@ -27,7 +27,7 @@ import { useRoute } from 'vue-router'
 import { getSubCategoryFilter } from '@/api/category'
 export default {
   name: 'SubFilter',
-  setup () {
+  setup (props, { emit }) {
     const route = useRoute()
     // 监听二级类目ID的变化获取筛选数据
     const filterData = ref(null)
@@ -52,7 +52,37 @@ export default {
       }
     }, { immediate: true })
 
-    return { filterData, filterLoading }
+    // 获取请求参数的函数
+    const getFilterParams = () => {
+      const params = {}
+      const attrs = []
+      params.brandId = filterData.value.selectedBrand
+      filterData.value.saleProperties.forEach(item => {
+        if (item.selectedProp) {
+          const attr = item.properties.find(obj => obj.id === item.selectedProp)
+          attrs.push({ groupName: item.name, propertyName: attr.name })
+        }
+      })
+      // 作用：当没有商品信息时，将params.attrs至为null，当为null时，不会发请求
+      if (params.attrs.length === 0) { params.attrs = null }
+      return params
+    }
+
+    // 品牌改变
+    const changeBrand = (id) => {
+      if (filterData.value.selectedBrand === id) return
+      filterData.value.selectedBrand = id
+      emit('filterChange', getFilterParams())
+    }
+
+    // 品类改变
+    const changeAttr = (item, id) => {
+      if (item.selectedProp === id) return
+      item.selectedProp = id
+      emit('filterChange', getFilterParams())
+    }
+
+    return { filterData, filterLoading, changeBrand, changeAttr }
   }
 }
 </script>
