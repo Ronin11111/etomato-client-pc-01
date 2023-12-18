@@ -18,6 +18,8 @@
         <div class="spec">
           <!-- 商品介绍 -->
           <GoodsName :goods="goods"/>
+          <!-- SKU规格组件 -->
+          <GoodsSku :goods="goods" @change="changeFn"></GoodsSku>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -42,17 +44,26 @@ import GoodsRelevant from './components/goods-relevant'
 import GoodsImage from './components/goods-images.vue'
 import GoodsSales from './components/goods-sale'
 import GoodsName from './components/goods-name.vue'
+import GoodsSku from './components/goods-sku.vue'
 
 import { findGoods } from '@/api/product'
 import { watch, ref, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 export default {
   name: 'XtxGoodsPage',
-  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName },
+  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName, GoodsSku },
   setup () {
     // 调用获取商品信息的函数
     const goods = getGoodsInfo()
-    return { goods }
+    const changeFn = (sku) => {
+      // 修改传给子组件中的信息
+      if (sku.skuId) {
+        goods.value.price = sku.price
+        goods.value.oldPrice = sku.oldPrice
+        goods.value.inventory = sku.inventory
+      }
+    }
+    return { goods, changeFn }
   }
 }
 // 获取商品信息
