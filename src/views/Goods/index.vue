@@ -20,6 +20,8 @@
           <GoodsName :goods="goods"/>
           <!-- SKU规格组件 -->
           <GoodsSku :goods="goods" @change="changeFn"></GoodsSku>
+          <!-- 数量选择组件 -->
+          <XtxNumbox v-model="num" label="数量" :max="goods.inventory"></XtxNumbox>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -55,6 +57,8 @@ export default {
   setup () {
     // 调用获取商品信息的函数
     const goods = getGoodsInfo()
+    // 商品数量
+    const num = ref(1)
     const changeFn = (sku) => {
       // 修改传给子组件中的信息
       if (sku.skuId) {
@@ -63,7 +67,7 @@ export default {
         goods.value.inventory = sku.inventory
       }
     }
-    return { goods, changeFn }
+    return { goods, num, changeFn }
   }
 }
 // 获取商品信息
