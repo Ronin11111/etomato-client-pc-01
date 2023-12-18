@@ -22,6 +22,8 @@
           <GoodsSku :goods="goods" @change="changeFn"></GoodsSku>
           <!-- 数量选择组件 -->
           <XtxNumbox v-model="num" label="数量" :max="goods.inventory"></XtxNumbox>
+          <!-- 按钮组件 -->
+          <XtxButton type="primary" style="margin-top:20px;">加入购物车</XtxButton>
         </div>
       </div>
       <!-- 商品推荐 -->

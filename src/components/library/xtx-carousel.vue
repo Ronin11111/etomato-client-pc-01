@@ -8,9 +8,22 @@
         :key="index"
         :class="{ fade: index === ind }"
       >
-        <RouterLink to="/">
+        <!-- 1.展示图片轮播图 -->
+        <RouterLink v-if="item.imgUrl" :to="item.hrefUrl">
           <img :src="item.imgUrl" alt="" />
         </RouterLink>
+        <!-- 2.展示商品列表轮播图 -->
+        <div v-else class="slider">
+          <RouterLink
+            v-for="goods in item"
+            :key="goods.id"
+            :to="`/product/${goods.id}`"
+          >
+            <img :src="goods.picture" alt="" />
+            <p class="name ellipsis">{{ goods.name }}</p>
+            <p class="price">&yen;{{ goods.price }}</p>
+          </RouterLink>
+        </div>
       </li>
     </ul>
     <a href="javascript:;" @click="triggle(-1)" class="carousel-btn prev"
@@ -69,11 +82,15 @@ export default {
     }
 
     // 2.设置自动播放条件
-    watch(() => props.list, (newVal) => {
-      if (newVal.length && props.autoPaly === true) {
-        playFn()
-      }
-    }, { immediate: true })
+    watch(
+      () => props.list,
+      (newVal) => {
+        if (newVal.length && props.autoPaly === true) {
+          playFn()
+        }
+      },
+      { immediate: true }
+    )
 
     // 3.1.鼠标移入时，关闭自动播放
     const startFn = () => {
@@ -82,7 +99,9 @@ export default {
 
     // 3.2.鼠标移出时，开启自动播放
     const closeFn = () => {
-      if (props.list.length && props.autoPaly === true) { playFn() }
+      if (props.list.length && props.autoPaly === true) {
+        playFn()
+      }
     }
 
     // 4.点击点点，切换至对应图片
@@ -127,6 +146,31 @@ export default {
       top: 0;
       opacity: 0;
       transition: opacity 0.5s linear;
+      // 轮播商品
+      .slider {
+        display: flex;
+        justify-content: space-around;
+        padding: 0 40px;
+        > a {
+          width: 240px;
+          text-align: center;
+          img {
+            padding: 20px;
+            width: 230px !important;
+            height: 230px !important;
+          }
+          .name {
+            font-size: 16px;
+            color: #666;
+            padding: 0 40px;
+          }
+          .price {
+            font-size: 16px;
+            color: @priceColor;
+            margin-top: 15px;
+          }
+        }
+      }
       &.fade {
         opacity: 1;
         z-index: 1;
