@@ -16,3 +16,17 @@ export const findRelGoods = (id, limit = 16) => {
 export const findHotGoods = ({ id, type, limit = 3 }) => {
   return request('/goods/hot', 'get', { id, type, limit })
 }
+
+// 获取产品评论数量信息
+export const findCommentInfoByGoods = (id) => {
+  // return request(`/goods/${id}/evaluate`)
+  // 模拟数据接口
+  return request(`https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate`, 'get')
+}
+
+// 获取产品评论列表
+export const findCommentList = (id, params) => {
+  // return request(`/goods/${id}/evaluate`)
+  // 模拟数据接口
+  return request(`https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate/page`, 'get', params)
+}
