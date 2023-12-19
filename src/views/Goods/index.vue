@@ -32,12 +32,15 @@
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-          <div class="goods-tabs"></div>
+          <GoodsTabs></GoodsTabs>
           <!-- 注意事项 -->
-          <div class="goods-warn"></div>
+          <GoodsWarn></GoodsWarn>
         </div>
-        <!-- 24热榜+专题推荐 -->
-        <div class="goods-aside"></div>
+        <!-- 24热榜/周榜+专题推荐 -->
+        <div class="goods-aside">
+          <GoodsHot :type="1"></GoodsHot>
+          <GoodsHot :type="2"></GoodsHot>
+        </div>
       </div>
     </div>
   </div>
@@ -49,16 +52,21 @@ import GoodsImage from './components/goods-images.vue'
 import GoodsSales from './components/goods-sale'
 import GoodsName from './components/goods-name.vue'
 import GoodsSku from './components/goods-sku.vue'
+import GoodsTabs from './components/goods-tabs.vue'
+import GoodsHot from './components/goods-hot.vue'
+import GoodsWarn from './components/goods-warn.vue'
 
 import { findGoods } from '@/api/product'
-import { watch, ref, nextTick } from 'vue'
+import { watch, ref, nextTick, provide } from 'vue'
 import { useRoute } from 'vue-router'
 export default {
   name: 'XtxGoodsPage',
-  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName, GoodsSku },
+  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsWarn, GoodsHot, GoodsName, GoodsSku, GoodsTabs },
   setup () {
     // 调用获取商品信息的函数
     const goods = getGoodsInfo()
+    // 将商品信息数据传给后代组件
+    provide('goods', goods)
     // 商品数量
     const num = ref(1)
     const changeFn = (sku) => {
