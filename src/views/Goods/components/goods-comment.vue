@@ -32,6 +32,8 @@
             <span class="attr">{{ formatSpec(item.orderInfo.specs) }}</span>
           </div>
           <div class="text">{{ item.content }}</div>
+          <!-- 图片预览组件 -->
+          <CommentImage v-if="item.pictures.length" :picture="item.pictures"></CommentImage>
           <div class="time">
             <span>{{ item.createTime }}</span>
             <span class="zan"><i class="iconfont icon-dianzan"></i>{{ item.praiseCount }}</span>
@@ -43,12 +45,14 @@
 </template>
 
 <script>
+import CommentImage from './goods-comment-image'
 import { findCommentInfoByGoods, findCommentList } from '@/api/product'
 import { reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 export default {
   name: 'GoodsComment',
+  components: { CommentImage },
   setup () {
     const route = useRoute()
     const goodsId = route.params.id
