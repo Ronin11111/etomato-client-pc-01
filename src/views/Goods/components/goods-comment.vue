@@ -33,7 +33,7 @@
           </div>
           <div class="text">{{ item.content }}</div>
           <!-- 图片预览组件 -->
-          <CommentImage v-if="item.pictures.length" :picture="item.pictures"></CommentImage>
+          <CommentImage v-if="item.pictures.length" :pictures="item.pictures"></CommentImage>
           <div class="time">
             <span>{{ item.createTime }}</span>
             <span class="zan"><i class="iconfont icon-dianzan"></i>{{ item.praiseCount }}</span>
@@ -41,6 +41,8 @@
         </div>
       </div>
     </div>
+    <!-- 分页组件 -->
+    <XtxPagination @change-page="changePageFn" :newCurrentPage="dataList.page" :newTotal="total"></XtxPagination>
   </div>
 </template>
 
@@ -59,6 +61,7 @@ export default {
     // 激活参数值
     const active = ref(0)
     const tags = ref(null)
+    const total = ref(null)
     // 设置请求参数
     const dataList = reactive({
       page: 1,
@@ -101,6 +104,7 @@ export default {
       findCommentList({ goodsId, dataList }).then(({ result }) => {
         console.log(result)
         commentList.value = result.items
+        total.value = result.counts
       })
     }, { immediate: true })
     // 格式化字符串
@@ -111,7 +115,11 @@ export default {
     const crypName = (name) => {
       return name.substr(0, 1) + '****' + name.substr(-1)
     }
-    return { tags, active, changeActive, dataList, changeSort, commentList, formatSpec, crypName }
+    // 接收子组件值
+    const changePageFn = (value) => {
+      dataList.page = value
+    }
+    return { tags, active, changeActive, dataList, changeSort, commentList, formatSpec, crypName, total, changePageFn }
   }
 }
 </script>

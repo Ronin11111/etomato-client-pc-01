@@ -3,8 +3,8 @@
     <div class="list">
       <a
         href="javascript:;"
-        :class="{active:currImage===url}"
-        @click="currImage=url"
+        :class="{active:currentImg===url}"
+        @click="currentImg=url"
         v-for="url in pictures"
         :key="url"
       >
@@ -12,9 +12,9 @@
       </a>
     </div>
     <!-- 图片预览 -->
-    <div class="preview" v-if="currImage">
-      <img :src="currImage" alt="">
-      <i @click="currImage=null" class="iconfont icon-close-new"></i>
+    <div class="preview" v-if="currentImg">
+      <img :src="currentImg" alt="">
+      <i @click="currentImg=null" class="iconfont icon-close-new"></i>
     </div>
   </div>
 </template>
