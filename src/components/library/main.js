@@ -1,4 +1,5 @@
 import defaultImg from '@/assets/images/200.png'
+import Message from './message'
 
 // 自动批量注册组件
 const importFn = require.context('./', false, /\.vue$/)
@@ -12,6 +13,8 @@ export default {
     })
     // 注册全局指令
     usedirective(app)
+    // 挂载message（提示消息）的原型方法
+    app.config.globalProperties.$message = Message
   }
 }
 
