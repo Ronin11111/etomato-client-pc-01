@@ -8,17 +8,17 @@ export default {
   },
   password (value) {
     if (!value) return '密码不能为空'
-    if (/^\w{6,12}$/.test(value)) return '密码为6-12个字符'
+    if (!/^\w{6,12}$/.test(value)) return '密码为6-12个字符'
     return true
   },
   mobile (value) {
     if (!value) return '手机号不能为空'
-    if (/^1[3,9]\d{10}$/.test(value)) return '手机号格式错误'
+    if (!/^1[3,9]\d{9}$/.test(value)) return '手机号格式错误'
     return true
   },
   code (value) {
     if (!value) return '验证码不能为空'
-    if (/^\d{6}$/.test(value)) return '验证码为6个数字'
+    if (!/^\d{6}$/.test(value)) return '验证码为6个数字'
     return true
   },
   isAgree (value) {

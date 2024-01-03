@@ -37,7 +37,7 @@
           <div class="input">
             <i class="iconfont icon-code"></i>
             <Field v-model="form.code" name="code" type="text" :class="{error:errors.code}" placeholder="请输入验证码"/>
-            <span class="code">发送验证码</span>
+            <span @click="sendCode" class="code">{{time===0?'发送验证码':`${time}秒`}}</span>
           </div>
           <div class="error" v-if="errors.code"><i class="iconfont icon-warning" />{{ errors.code }}</div>
         </div>
@@ -64,10 +64,14 @@
   </div>
 </template>
 <script>
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, onUnmounted } from 'vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validate'
 import Message from '@/components/library/message'
+import { userAccountLogin, userMobileLoginMsg, userMobileLogin } from '@/api/user'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+import { useIntervalFn } from '@vueuse/core'
 
 export default {
   name: 'LoginForm',
@@ -83,6 +87,12 @@ export default {
       mobile: null,
       code: null
     })
+
+    const store = useStore()
+    // 路由对象
+    const route = useRoute()
+    const router = useRouter()
+
     // 2.定义表单校验规则
     const mySchema = {
       isAgree: schema.isAgree,
@@ -104,11 +114,64 @@ export default {
     })
     // 4.提交时，进行表单验证
     const login = async () => {
-      const valid = await loginForm.value.validate()
-      console.log(valid)
-      Message({ type: 'error', text: '用户名错误' })
+      let data = null
+      try {
+        const valid = await loginForm.value.validate()
+        if (valid) {
+          if (!isMsgLogin.value) {
+            const { account, password } = form
+            data = await userAccountLogin({ account, password })
+          } else {
+            const { mobile, code } = form
+            data = await userMobileLogin({ mobile, code })
+          }
+          const { id, avatar, nickname, account, mobile, token } = data.result
+          // 1.在vuex中存储数据
+          store.commit('user/setUser', { id, avatar, nickname, account, mobile, token })
+          // 2.跳转至首页/原页面
+          console.log(route.query.redirectUrl)
+          router.push(route.query.redirectUrl || '/')
+          // 3.登录成功信息
+          Message({ type: 'success', text: '登录成功' })
+        }
+      } catch (err) {
+        console.log(err)
+      }
     }
-    return { isMsgLogin, form, schema: mySchema, loginForm, login }
+    // 5.定义倒计时函数
+    const time = ref(0)
+    // 使用useIntervalFn(回调函数，执行间隔，是否立即开启)
+    const { pause, resume } = useIntervalFn(() => {
+      time.value--
+      if (time.value <= 0) {
+        pause()
+      }
+    }, 1000, false)
+    // 6.发送验证码
+    const sendCode = async () => {
+      // 1.校验手机号格式
+      const valid = mySchema.mobile(form.mobile)
+      // 1.1.手机格式正确
+      if (valid === true) {
+        // 注意：还需判断倒计时是否为0！！！
+        if (time.value === 0) {
+        // 2.调用code的API
+          await userMobileLoginMsg(form.mobile)
+          // 3.将按钮变成倒计时
+          Message({ type: 'success', text: '验证码发送成功' })
+          time.value = 60
+          resume()
+        }
+      } else {
+        // 1.2.手机号校验失败，使用vee的setFieldError()发送错误提示
+        loginForm.value.setFieldError('mobile', valid)
+      }
+    }
+    // 组件销毁，清除定时器
+    onUnmounted(() => {
+      pause()
+    })
+    return { isMsgLogin, form, schema: mySchema, loginForm, login, sendCode, time }
   }
 }
 </script>

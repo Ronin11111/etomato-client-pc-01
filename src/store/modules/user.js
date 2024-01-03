@@ -2,7 +2,7 @@
 
 export default {
   // 规定：子模块中的state必须写成函数形式return数据
-  state () {
+  state: () => {
     return {
       // 用户信息
       profile: {
@@ -13,6 +13,12 @@ export default {
         mobile: '',
         token: ''
       }
+    }
+  },
+  mutations: {
+    // 修改用户信息
+    setUser (state, payload) {
+      state.profile = payload
     }
   }
 }
