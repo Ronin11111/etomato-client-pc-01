@@ -1,8 +1,7 @@
-// 用户信息数据
-
+// 用户信息模块
 export default {
-  // 规定：子模块中的state必须写成函数形式return数据
-  state: () => {
+  namespaced: true,
+  state () {
     return {
       // 用户信息
       profile: {
@@ -12,13 +11,19 @@ export default {
         account: '',
         mobile: '',
         token: ''
-      }
+      },
+      // 登录后回跳路径
+      redirectUrl: '/'
     }
   },
   mutations: {
-    // 修改用户信息
+    // 修改用户信息，payload就是用户信息对象
     setUser (state, payload) {
       state.profile = payload
+    },
+    // 修改回跳地址
+    setRedirectUrl (state, url) {
+      state.redirectUrl = url
     }
   }
 }

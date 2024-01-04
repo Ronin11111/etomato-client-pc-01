@@ -55,7 +55,9 @@
       <a @click="login" class="btn">登录</a>
     </Form>
     <div class="action">
-      <img src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png" alt="">
+      <a href="https://graph.qq.com/oauth2.0/authorize?client_id=100556005&response_type=token&scope=all&redirect_uri=http%3A%2F%2Fwww.corho.com%3A8080%2F%23%2Flogin%2Fcallback">
+        <img src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png" alt="">
+      </a>
       <div class="url">
         <a href="javascript:;">忘记密码</a>
         <a href="javascript:;">免费注册</a>
@@ -72,6 +74,7 @@ import { userAccountLogin, userMobileLoginMsg, userMobileLogin } from '@/api/use
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { useIntervalFn } from '@vueuse/core'
+// import QC from 'qc';
 
 export default {
   name: 'LoginForm',
@@ -125,11 +128,12 @@ export default {
             const { mobile, code } = form
             data = await userMobileLogin({ mobile, code })
           }
-          const { id, avatar, nickname, account, mobile, token } = data.result
+          console.log(data.result)
+          const { id, account, avatar, mobile, nickname, token } = data.result
           // 1.在vuex中存储数据
-          store.commit('user/setUser', { id, avatar, nickname, account, mobile, token })
+          store.commit('user/setUser', { id, account, avatar, mobile, nickname, token })
           // 2.跳转至首页/原页面
-          console.log(route.query.redirectUrl)
+          // console.log(route.query.redirectUrl)
           router.push(route.query.redirectUrl || '/')
           // 3.登录成功信息
           Message({ type: 'success', text: '登录成功' })
@@ -167,6 +171,13 @@ export default {
         loginForm.value.setFieldError('mobile', valid)
       }
     }
+    // 创建QQ登录按钮
+    // 注意：创建的QQ登录按钮，会打开新窗口实现页面跳转，所以自行创建QQ跳转按钮
+    /*     onMounted(() => {
+      QC.login({
+        btnid:'qqLoginBtn'
+      })
+    }) */
     // 组件销毁，清除定时器
     onUnmounted(() => {
       pause()

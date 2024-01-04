@@ -3,7 +3,6 @@ const path = require('path')
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
-
   pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'less',
@@ -14,6 +13,12 @@ module.exports = defineConfig({
         path.join(__dirname, './src/assets/style/mixins.less'),
         path.join(__dirname, './src/assets/style/variables.less')
       ]
+    }
+  },
+  // # 这个是设置外部扩展，模块为qc变量名为QC，导入qc将不做打包。
+  configureWebpack: {
+    externals: {
+      qc: 'QC'
     }
   }
 })
