@@ -12,10 +12,17 @@ const routes = [{
     { path: '/category/sub/:id', component: () => import('@/views/Category/subCate') },
     { path: '/product/:id', component: () => import('@/views/Goods/index') }
   ]
-}, {
+},
+{
   path: '/login',
   component: () => import('@/views/Login')
-}]
+},
+{
+  path: '/login/callback',
+  component: () => import('@/views/Login/callback.vue')
+}
+
+]
 
 const router = createRouter({
   history: createWebHashHistory(),
