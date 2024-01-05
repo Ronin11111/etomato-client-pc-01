@@ -45,3 +45,32 @@ export const userQQBindCode = (mobile) => {
 export const userQQBindLogin = ({ unionId, mobile, code }) => {
   return request('/login/social/bind', 'post', { unionId, mobile, code })
 }
+
+/**
+ * 校验帐号是否存在
+ * @param {String} account - 帐号
+ * @returns Promise
+ */
+export const userCheckAccount = (account) => {
+  return request('/register/check', 'get', { account })
+}
+
+/**
+ * 获取QQ完善信息的时候短信验证码
+ * @param {String} mobile - 手机号
+ * @returns promise
+ */
+export const userQQInfoCode = (mobile) => {
+  return request('/regist/code', 'get', { mobile })
+}
+
+/**
+ * QQ登录-注册且绑定帐号
+ * @param {String} unionId - QQ唯一标识，openId
+ * @param {String} mobile - 手机号
+ * @param {String} code - 验证码
+ * @returns
+ */
+export const userQQInfoLogin = ({ unionId, mobile, code }) => {
+  return request(`/login/social/${unionId}/bind`, 'post', { unionId, mobile, code })
+}
