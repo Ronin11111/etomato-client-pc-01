@@ -32,6 +32,8 @@ import LogiHeader from './components/login-header.vue'
 import LoginFooter from './components/login-footer'
 import LoginForm from './components/login-form'
 import { ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 export default {
   name: 'PageLogin',
   components: {
@@ -41,6 +43,10 @@ export default {
   },
   setup () {
     const activeName = ref('account')
+    const store = useStore()
+    const route = useRoute()
+    // 将当前跳转路由信息存储
+    store.commit('user/setRedirectUrl', route.query.redirectUrl)
     return { activeName }
   }
 }
