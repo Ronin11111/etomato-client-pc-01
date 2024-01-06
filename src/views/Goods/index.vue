@@ -23,7 +23,7 @@
           <!-- 数量选择组件 -->
           <XtxNumbox v-model="num" label="数量" :max="goods.inventory"></XtxNumbox>
           <!-- 按钮组件 -->
-          <XtxButton type="primary" style="margin-top:20px;">加入购物车</XtxButton>
+          <XtxButton @click="addCart" type="primary" style="margin-top:20px;">加入购物车</XtxButton>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -55,10 +55,12 @@ import GoodsSku from './components/goods-sku.vue'
 import GoodsTabs from './components/goods-tabs.vue'
 import GoodsHot from './components/goods-hot.vue'
 import GoodsWarn from './components/goods-warn.vue'
+import Message from '@/components/library/message'
 
 import { findGoods } from '@/api/product'
 import { watch, ref, nextTick, provide } from 'vue'
 import { useRoute } from 'vue-router'
+import store from '@/store'
 export default {
   name: 'XtxGoodsPage',
   components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsWarn, GoodsHot, GoodsName, GoodsSku, GoodsTabs },
@@ -76,8 +78,38 @@ export default {
         goods.value.oldPrice = sku.oldPrice
         goods.value.inventory = sku.inventory
       }
+      // 存储sku商品信息,方便做购物车判断
+      currentSku.value = sku
     }
-    return { goods, num, changeFn }
+
+    // 3.存储购物车商品
+    const currentSku = ref(null)
+    const addCart = () => {
+      // 3.1.判断购物车信息是否为空
+      if (currentSku.value && currentSku.value.skuId) {
+        // 3.2.解构商品信息
+        const { id, name, mainPictures } = goods.value
+        const { inventory, specsText, skuId, price } = currentSku.value
+        store.dispatch('cart/insertCart', {
+          skuId,
+          price,
+          nowPrice: price,
+          id,
+          name,
+          picture: mainPictures[0],
+          count: num.value,
+          attrsText: specsText,
+          selected: true,
+          isEffective: true,
+          stock: inventory
+        }).then(() => {
+          Message({ type: 'success', text: '添加购物车成功' })
+        })
+      } else {
+        Message({ text: '请选择完整规格' })
+      }
+    }
+    return { goods, num, changeFn, addCart }
   }
 }
 // 获取商品信息

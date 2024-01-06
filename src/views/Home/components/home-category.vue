@@ -7,10 +7,10 @@
         :key="item.id"
         @mouseenter="currentId = item.id"
       >
-        <RouterLink to="`/category/${item.id}`">{{ item.name }}</RouterLink>
+        <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
         <template v-if="item.children">
           <RouterLink
-            to="`/category/sub/${item.id}`"
+            :to="`/category/sub/${item.id}`"
             v-for="sub in item.children"
             :key="sub.id"
             >{{ sub.name }}</RouterLink
