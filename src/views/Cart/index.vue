@@ -82,9 +82,9 @@
       <div class="action">
         <div class="batch">
           <XtxCheckbox @change="isAllSelect" :modelValue="$store.getters['cart/isAll']">全选</XtxCheckbox>
-          <a @click="batchGoods">删除商品</a>
+          <a @click="batchGoods()">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
-          <a href="javascript:;">清空失效商品</a>
+          <a @click="batchGoods(false)">清空失效商品</a>
         </div>
         <div class="total">
           共 {{ $store.getters['cart/validCount'] }} 件商品，已选择 {{$store.getters['cart/selectedCount']}}件，商品合计：
@@ -130,9 +130,9 @@ export default {
         )
     }
     // 批量删除
-    const batchGoods = () => {
-      Confrim({ text: '确认删除选中的商品列表' }).then(() => {
-        store.dispatch('cart/batchDelete').then(() => {
+    const batchGoods = (isBatch) => {
+      Confrim({ text: `确认删除${isBatch ? '选中的' : '无效的'}商品列表` }).then(() => {
+        store.dispatch('cart/batchDelete', isBatch).then(() => {
           Message({ type: 'success', text: '删除商品成功！' })
         })
       }

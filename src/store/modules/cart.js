@@ -138,13 +138,13 @@ export default {
         }
       })
     },
-    // 6.批量删除购物车中的商品
-    batchDelete (context) {
+    // 6.批量删除购物车中的商品-清除无效商品
+    batchDelete (context, isBatch) {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.profile.token) {
           //
         } else {
-          context.getters.selectedList.forEach(item => {
+          context.getters[isBatch ? 'selectedList' : 'validList'].forEach(item => {
             context.commit('deleteCart', item.skuId)
           })
           resolve()
