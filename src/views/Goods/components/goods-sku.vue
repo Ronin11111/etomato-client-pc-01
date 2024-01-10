@@ -47,14 +47,12 @@ const initSelected = (goods, skuId) => {
   // ①找到对应的sku组合
   const initSku = goods.skus.find(sku => sku.id === skuId)
   if (initSku) {
-    goods.specs.forEach((spec, i) => {
-      const value = initSku.specs[i].valueName
-      spec.values.forEach(val => {
-        // ②遍历每行属性，找到组合中的每个规格
-        const valItem = val.find(val => val.name === value)
-        // ③将其selected设为true
-        valItem.selected = true
-      })
+    // console.log('有初始化选项')
+    // ②遍历每行属性，找到组合中的每个规格
+    goods.specs.forEach((item, i) => {
+      const val = item.values.find(val => val.name === initSku.specs[i].valueName)
+      // ③将其selected设为true
+      val.selected = true
     })
   }
 }
@@ -104,7 +102,7 @@ export default {
     // 获取路径地图
     const pathMap = getpathMap(props.goods.skus, props.skuId)
     // 初始化选中状态
-    initSelected(props.goods)
+    initSelected(props.goods, props.skuId)
     // ①初始化时，判断按钮选中状态
     updateStatus(props.goods.specs, pathMap)
     const changeItem = (item, obj) => {

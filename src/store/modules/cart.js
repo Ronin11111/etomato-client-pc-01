@@ -88,7 +88,7 @@ export default {
         }
       })
     },
-    // 2.修改购物车信息
+    // 2.添加购物车信息
     updateCart (context) {
       // 2.1.创建promise对象
       return new Promise((resolve, reject) => {
@@ -105,7 +105,7 @@ export default {
         }
       })
     },
-    // 4.单选操作数据修改
+    // 4.修改购物车数据
     updateSelected (context, payloay) {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.profile.token) {
@@ -119,7 +119,7 @@ export default {
     // 5.全选操作数据修改
     isAllSelected (context, selected) {
       return new Promise((resolve, reject) => {
-        if (context.rootState.profile.token) {
+        if (context.rootState.profile.user.token) {
           //
         } else {
           context.getters.validList.forEach(item => context.commit({ skuId: item.skuId, selected }))
@@ -144,9 +144,28 @@ export default {
         if (context.rootState.user.profile.token) {
           //
         } else {
-          context.getters[isBatch ? 'selectedList' : 'validList'].forEach(item => {
+          context.getters[isBatch ? 'selectedList' : 'invalidList'].forEach(item => {
             context.commit('deleteCart', item.skuId)
           })
+          resolve()
+        }
+      })
+    },
+    // 7.修改购物车商品Sku信息
+    updateSku (context, { oldSkuId, newSku }) {
+      return new Promise((resolve, reject) => {
+        if (context.rootState.user.profile.token) {
+          //
+        } else {
+          // 7.1.找到旧商品列
+          const oldGoods = context.state.list.find(item => item.skuId === oldSkuId)
+          // 7.2.删除旧商品列
+          context.commit('deleteCart', oldSkuId)
+          // 7.3.将旧商品信息和新商品信息合并成为新商品数据
+          const { skuId, price: nowPrice, inventory: stock, specsText: attrsText } = newSku
+          const newGoods = { ...oldGoods, skuId, nowPrice, stock, attrsText }
+          // 4. 插入新数据
+          context.commit('insertCart', newGoods)
           resolve()
         }
       })

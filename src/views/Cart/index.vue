@@ -33,6 +33,7 @@
                   <div>
                     <p class="name ellipsis">{{ item.name }}</p>
                     <!-- 选择规格组件 -->
+                    <CartSku @change="($event)=>updateCartSku(item.skuId,$event)" :skuId="item.skuId" :infoText="item.attrsText"></CartSku>
                   </div>
                 </div>
               </td>
@@ -41,7 +42,7 @@
                 <p v-if="item.price-item.nowPrice>0">比加入时降价 <span class="red">&yen;{{ item.price-item.nowPrice }}</span></p>
               </td>
               <td class="tc">
-                <XtxNumbox :modelValue="item.count" />
+                <XtxNumbox  @change="($event)=>updateCount(item.skuId,$event)" :max="item.stock" :modelValue="item.count"/>
               </td>
               <td class="tc"><p class="f16 red">&yen;{{item.nowPrice*100*item.count/100}}</p></td>
               <td class="tc">
@@ -101,12 +102,13 @@
 import GoodRelevant from '@/views/Goods/components/goods-relevant'
 import { useStore } from 'vuex'
 import CartNone from './component/cart-none'
+import CartSku from './component/cart-sku'
 import Message from '@/components/library/message'
 import Confrim from '@/components/library/confrim'
 
 export default {
   name: 'XtxCartPage',
-  components: { GoodRelevant, CartNone },
+  components: { GoodRelevant, CartNone, CartSku },
   setup () {
     const store = useStore()
     // 单选操作
@@ -138,7 +140,17 @@ export default {
       }
       ).catch(e => {})
     }
-    return { isSelected, isAllSelect, deleteGoods, batchGoods }
+    // 修改商品数量
+    const updateCount = (skuId, count) => {
+      console.log(count)
+      store.dispatch('cart/updateSelected', { skuId, count })
+    }
+    // 修改购物车商品Sku信息
+    const updateCartSku = (oldSkuId, newSku) => {
+      console.log(newSku)
+      store.dispatch('cart/updateSku', { oldSkuId, newSku })
+    }
+    return { isSelected, isAllSelect, deleteGoods, batchGoods, updateCount, updateCartSku }
   }
 }
 </script>
