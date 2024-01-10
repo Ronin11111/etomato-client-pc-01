@@ -40,9 +40,9 @@
         v-if="currentGoods && currentGoods.goods && currentGoods.goods.length"
       >
         <li v-for="item in currentGoods.goods" :key="item.id">
-          <RouterLink to="/">
+          <RouterLink :to="`/product/${item.id}`">
             <img :src="item.picture" alt="" />
-            <div class="info">
+            <div class="info">s
               <p class="name ellipsis-2">{{ item.name }}</p>
               <p class="desc ellipsis">{{ item.desc }}</p>
               <p class="price"><i>¥</i>{{ item.price }}</p>

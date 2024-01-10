@@ -10,7 +10,8 @@ const routes = [{
     { path: '/', component: () => import('@/views/Home/index') },
     { path: '/category/:id', component: () => import('@/views/Category/index') },
     { path: '/category/sub/:id', component: () => import('@/views/Category/subCate') },
-    { path: '/product/:id', component: () => import('@/views/Goods/index') }
+    { path: '/product/:id', component: () => import('@/views/Goods/index') },
+    { path: '/cart', component: () => import('@/views/Cart/index') }
   ]
 },
 {

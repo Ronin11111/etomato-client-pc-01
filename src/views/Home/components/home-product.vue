@@ -3,7 +3,7 @@
     <HomePanel :title="cate.title" v-for="cate in cateList" :key="cate.id">
       <template v-slot:right>
         <div class="sub">
-          <RouterLink v-for="sub in cateList.children" :key="sub.id" to="/">{{sub.name}}</RouterLink>
+          <RouterLink v-for="sub in cateList.children" :key="sub.id" :to="`/product/${sub.id}`">{{sub.name}}</RouterLink>
         </div>
         <XtxMore />
       </template>
