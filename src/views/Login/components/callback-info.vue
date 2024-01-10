@@ -119,10 +119,13 @@ export default {
           // 7.1.存储数据
           const { id, account, avatar, mobile, nickname, token } = data.result
           store.commit('user/setUser', { id, account, avatar, mobile, nickname, token })
-          // 7.2.页面跳转
-          router.push(route.query.redirectUrl || '/')
-          // 7.3.登录成功信息
-          Message({ type: 'success', text: 'QQ绑定成功' })
+          // 7.3.合并购物车
+          store.dispatch('cart/mergeCart').then(() => {
+            // 7.2.页面跳转
+            router.push(route.query.redirectUrl || '/')
+            // 7.3.登录成功信息
+            Message({ type: 'success', text: 'QQ绑定成功' })
+          })
         }).catch(e => {
           Message({ type: 'error', text: '登录失败' })
         })

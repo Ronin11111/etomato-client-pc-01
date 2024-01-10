@@ -1,4 +1,4 @@
-import { getNewCartGoods } from '@/api/cart'
+import { getNewCartGoods, mergeLocalCart } from '@/api/cart'
 
 // 购物车信息数据
 export default {
@@ -70,6 +70,11 @@ export default {
     deleteCart (state, skuId) {
       const index = state.list.findIndex(item => item.skuId === skuId)
       state.list.splice(index, 1)
+    },
+    // 4.设置购物车信息
+    // 可为购物车设值，也可清空购物车中数据
+    setCart (state, payloay) {
+      state.list = payloay
     }
   },
   actions: {
@@ -169,6 +174,15 @@ export default {
           resolve()
         }
       })
+    },
+    // 8.合并购物车
+    async mergeCart (context) {
+      const cartList = context.getters.validList.map(({ skuId, selected, count }) => {
+        return { skuId, selected, count }
+      })
+      // 8.2.合并购物车信息的API
+      await mergeLocalCart(cartList)
+      context.commit('setCart', [])
     }
   }
 }

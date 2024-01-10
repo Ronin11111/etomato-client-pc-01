@@ -134,9 +134,13 @@ export default {
           store.commit('user/setUser', { id, account, avatar, mobile, nickname, token })
           // 2.跳转至首页/原页面
           // console.log(route.query.redirectUrl)
-          router.push(route.query.redirectUrl || '/')
-          // 3.登录成功信息
-          Message({ type: 'success', text: '登录成功' })
+          // 7.1.合并购物车
+          store.dispatch('cart/mergeCart').then(() => {
+            // 7.2.页面跳转
+            router.push(route.query.redirectUrl || '/')
+            // 7.3.登录成功信息
+            Message({ type: 'success', text: 'QQ绑定成功' })
+          })
         }
       } catch (err) {
         console.log(err)

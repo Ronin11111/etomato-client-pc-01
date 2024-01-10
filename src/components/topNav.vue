@@ -37,6 +37,8 @@ export default {
     const router = useRouter()
     const layOut = () => {
       store.commit('user/setUser', {})
+      // 清空购物车
+      store.commit('cart/setCart', [])
       router.push('/login')
     }
     return { profile, layOut }
