@@ -137,6 +137,19 @@ export default {
           resolve()
         }
       })
+    },
+    // 6.批量删除购物车中的商品
+    batchDelete (context) {
+      return new Promise((resolve, reject) => {
+        if (context.rootState.user.profile.token) {
+          //
+        } else {
+          context.getters.selectedList.forEach(item => {
+            context.commit('deleteCart', item.skuId)
+          })
+          resolve()
+        }
+      })
     }
   }
 }

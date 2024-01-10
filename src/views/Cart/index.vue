@@ -82,7 +82,7 @@
       <div class="action">
         <div class="batch">
           <XtxCheckbox @change="isAllSelect" :modelValue="$store.getters['cart/isAll']">全选</XtxCheckbox>
-          <a href="javascript:;">删除商品</a>
+          <a @click="batchGoods">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
           <a href="javascript:;">清空失效商品</a>
         </div>
@@ -129,7 +129,16 @@ export default {
           console.log('取消')
         )
     }
-    return { isSelected, isAllSelect, deleteGoods }
+    // 批量删除
+    const batchGoods = () => {
+      Confrim({ text: '确认删除选中的商品列表' }).then(() => {
+        store.dispatch('cart/batchDelete').then(() => {
+          Message({ type: 'success', text: '删除商品成功！' })
+        })
+      }
+      ).catch(e => {})
+    }
+    return { isSelected, isAllSelect, deleteGoods, batchGoods }
   }
 }
 </script>
