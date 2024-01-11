@@ -90,7 +90,7 @@
         <div class="total">
           共 {{ $store.getters['cart/validCount'] }} 件商品，已选择 {{$store.getters['cart/selectedCount']}}件，商品合计：
           <span class="red">¥{{ $store.getters['cart/selectedPrice'] }}</span>
-          <XtxButton type="primary">下单结算</XtxButton>
+          <XtxButton @click="checkOut" type="primary">下单结算</XtxButton>
         </div>
       </div>
       <!-- 猜你喜欢 -->
@@ -101,6 +101,7 @@
 <script>
 import GoodRelevant from '@/views/Goods/components/goods-relevant'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import CartNone from './component/cart-none'
 import CartSku from './component/cart-sku'
 import Message from '@/components/library/message'
@@ -150,7 +151,22 @@ export default {
       console.log(newSku)
       store.dispatch('cart/updateSku', { oldSkuId, newSku })
     }
-    return { isSelected, isAllSelect, deleteGoods, batchGoods, updateCount, updateCartSku }
+
+    // 实现支付跳转
+    const router = useRouter()
+    const checkOut = () => {
+      if (store.getters['cart/selectedList'].length === 0) {
+        return Message({ text: '请至少勾选一件商品' })
+      }
+      if (!store.state.user.profile.token) {
+        Confrim({ text: '支付前请您完成登录' }).then(() => {
+          router.push('/member/checkout')
+        }).catch(e => {})
+      } else {
+        router.push('/member/checkout')
+      }
+    }
+    return { isSelected, isAllSelect, deleteGoods, batchGoods, updateCount, updateCartSku, checkOut }
   }
 }
 </script>

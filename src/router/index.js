@@ -2,6 +2,7 @@ import {
   createRouter,
   createWebHashHistory
 } from 'vue-router'
+import store from '@/store'
 
 const routes = [{
   path: '/',
@@ -32,6 +33,16 @@ const router = createRouter({
   scrollBehavior () {
     return { left: 0, top: 0 }
   }
+})
+
+// 前置导航守卫
+router.beforeEach((to, from, next) => {
+  const { profile } = store.state.user
+  // 跳转去member开头的地址却没有登录
+  if (to.path.startsWith('/member') && !profile.token) {
+    next({ path: '/login', query: { redirectUrl: to.fullPath } })
+  }
+  next()
 })
 
 export default router
