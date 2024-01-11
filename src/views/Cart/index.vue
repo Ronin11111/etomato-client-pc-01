@@ -83,7 +83,7 @@
       <div class="action">
         <div class="batch">
           <XtxCheckbox @change="isAllSelect" :modelValue="$store.getters['cart/isAll']">全选</XtxCheckbox>
-          <a @click="batchGoods()">删除商品</a>
+          <a @click="batchGoods">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
           <a @click="batchGoods(false)">清空失效商品</a>
         </div>

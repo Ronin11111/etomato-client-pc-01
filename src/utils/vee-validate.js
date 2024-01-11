@@ -4,13 +4,13 @@ export default {
   account (value) {
     if (!value) return '用户名不能为空'
     // 字母开头，6-20个字符
-    if (!/^[a-zA-Z]\w{5,19}$/.test(value)) return '字母开头且6-12个字符'
+    if (!/^[a-zA-Z]\w{3,11}$/.test(value)) return '字母开头且4-12个字符'
     return true
   },
   async accountApi (value) {
     if (!value) return '用户名不能为空'
     // 字母开头，6-20个字符
-    if (!/^[a-zA-Z]\w{5,19}$/.test(value)) return '字母开头且6-12个字符'
+    if (!/^[a-zA-Z]\w{3,11}$/.test(value)) return '字母开头且4-12个字符'
     const { result } = await userCheckAccount(value)
     if (result.valid) return '用户名已存在'
     return true

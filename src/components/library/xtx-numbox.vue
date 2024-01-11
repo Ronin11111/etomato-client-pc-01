@@ -2,9 +2,9 @@
   <div class="xtx-numbox">
     <div class="label">{{ label }}</div>
     <div class="numbox">
-      <a href="javascript:;" @click="changeNum(-1)">-</a>
+      <a @click="changeNum(-1)">-</a>
       <input type="text" readonly :value="modelValue">
-      <a href="javascript:;" @click="changeNum(1)">+</a>
+      <a @click="changeNum(1)">+</a>
     </div>
   </div>
 </template>
@@ -36,8 +36,9 @@ export default {
       const newVal = numVal.value + step
       if (newVal < props.min || newVal > props.max) return false
       numVal.value = newVal
+      // console.log(newVal)
       // 给该组件绑定@change事件
-      emit('change', numVal)
+      emit('change', newVal)
     }
     return { changeNum }
   }

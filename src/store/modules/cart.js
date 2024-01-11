@@ -1,4 +1,4 @@
-import { getNewCartGoods, mergeLocalCart, getCartList } from '@/api/cart'
+import { getNewCartGoods, mergeLocalCart, getCartList, insertCart, deleteCart, updateCart, checkAllCart } from '@/api/cart'
 
 // 购物车信息数据
 export default {
@@ -86,7 +86,12 @@ export default {
         // 在另一个子模块中获取另一子模块中的state
         if (context.rootState.user.profile.token) {
           // 1.1.登录状态
-          getCartList().then((data) => {
+          insertCart({
+            skuId: goods.skuId,
+            count: goods.count
+          }).then(() => {
+            return getCartList()
+          }).then(data => {
             context.commit('setCart', data.result)
             resolve()
           })
@@ -97,13 +102,17 @@ export default {
         }
       })
     },
-    // 2.添加购物车信息
+    // 2.获取购物车信息（首次获取信息）
     updateCart (context) {
       // 2.1.创建promise对象
       return new Promise((resolve, reject) => {
         // 2.2.判断是否登录
         if (context.rootState.user.profile.token) {
           // 已登录
+          getCartList().then((data) => {
+            context.commit('setCart', data.result)
+            resolve()
+          })
         } else {
           const goodList = context.state.list.map(item => { return getNewCartGoods(item.skuId) })
           Promise.all(goodList).then((data) => {
@@ -114,22 +123,34 @@ export default {
         }
       })
     },
-    // 4.修改购物车数据
+    // 4.修改购物车数据-数量|商品选中状态
     updateSelected (context, payloay) {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.profile.token) {
           // 已登录
+          updateCart(payloay).then(() => {
+            return getCartList()
+          }).then(data => {
+            context.commit('setCart', data.result)
+            resolve()
+          })
         } else {
           context.commit('updateCart', payloay)
           resolve()
         }
       })
     },
-    // 5.全选操作数据修改
+    // 5.全选操作-反选
     isAllSelected (context, selected) {
       return new Promise((resolve, reject) => {
-        if (context.rootState.profile.user.token) {
-          //
+        if (context.rootState.user.profile.token) {
+          const ids = context.getters.validList.map(item => item.skuId)
+          checkAllCart({ selected, ids }).then(() => {
+            return getCartList()
+          }).then(data => {
+            context.commit('setCart', data.result)
+            resolve()
+          })
         } else {
           context.getters.validList.forEach(item => context.commit({ skuId: item.skuId, selected }))
           resolve()
@@ -141,6 +162,12 @@ export default {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.profile.token) {
           // 已登录
+          deleteCart([skuId]).then(() => {
+            return getCartList()
+          }).then(data => {
+            context.commit('setCart', data.result)
+            resolve()
+          })
         } else {
           context.commit('deleteCart', skuId)
           resolve()
@@ -151,7 +178,14 @@ export default {
     batchDelete (context, isBatch) {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.profile.token) {
-          //
+          // 需要删除商品的id集合
+          const skuIds = context.getters[isBatch ? 'selectedList' : 'invalidList'].map(item => item.skuId)
+          deleteCart(skuIds).then(() => {
+            return getCartList()
+          }).then(data => {
+            context.commit('setCart', data.result)
+            resolve()
+          })
         } else {
           context.getters[isBatch ? 'selectedList' : 'invalidList'].forEach(item => {
             context.commit('deleteCart', item.skuId)
@@ -164,7 +198,15 @@ export default {
     updateSku (context, { oldSkuId, newSku }) {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.profile.token) {
-          //
+          const oldGoods = context.getters.validList.find(item => item.skuId === oldSkuId)
+          deleteCart([oldSkuId]).then(() => {
+            insertCart({ skuId: newSku.skuId, count: oldGoods.count })
+          }).then(() => {
+            return getCartList()
+          }).then((data) => {
+            context.commit('setCart', data.result)
+            resolve()
+          })
         } else {
           // 7.1.找到旧商品列
           const oldGoods = context.state.list.find(item => item.skuId === oldSkuId)
