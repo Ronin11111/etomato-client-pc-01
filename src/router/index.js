@@ -12,7 +12,8 @@ const routes = [{
     { path: '/category/:id', component: () => import('@/views/Category/index') },
     { path: '/category/sub/:id', component: () => import('@/views/Category/subCate') },
     { path: '/product/:id', component: () => import('@/views/Goods/index') },
-    { path: '/cart', component: () => import('@/views/Cart/index') }
+    { path: '/cart', component: () => import('@/views/Cart/index') },
+    { path: '/member/checkout', component: () => import('@/views/member/pay/checkOut') }
   ]
 },
 {
