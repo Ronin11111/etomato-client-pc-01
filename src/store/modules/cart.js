@@ -1,4 +1,4 @@
-import { getNewCartGoods, mergeLocalCart } from '@/api/cart'
+import { getNewCartGoods, mergeLocalCart, getCartList } from '@/api/cart'
 
 // 购物车信息数据
 export default {
@@ -86,6 +86,10 @@ export default {
         // 在另一个子模块中获取另一子模块中的state
         if (context.rootState.user.profile.token) {
           // 1.1.登录状态
+          getCartList().then((data) => {
+            context.commit('setCart', data.result)
+            resolve()
+          })
         } else {
           // 1.2.未登录状态
           context.commit('insertCart', goods)
