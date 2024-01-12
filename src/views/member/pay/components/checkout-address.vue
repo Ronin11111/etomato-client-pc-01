@@ -11,7 +11,7 @@
     </div>
     <div class="action">
       <XtxButton @click="openAdd" class="btn">切换地址</XtxButton>
-      <XtxButton class="btn">添加地址</XtxButton>
+      <XtxButton @click="AddressEdit.open()" class="btn">添加地址</XtxButton>
     </div>
   </div>
   <!-- 对话框组件-切换收货地址 -->
@@ -29,11 +29,14 @@
     </template>
   </XtxDialog>
   <!-- 收货地址添加编辑组件 -->
+  <AddressEdit ref="AddressEdit"></AddressEdit>
 </template>
 <script>
+import AddressEdit from './address-edit'
 import { ref } from 'vue'
 export default {
   name: 'CheckoutAddress',
+  components: { AddressEdit },
   props: {
     list: {
       type: Array,
@@ -76,7 +79,8 @@ export default {
     // 向父组件提交地址id值 =>?.即在赋值前先判断address中是否有值
     // address.value?.id <==>address.value&&address.value.id
     emit('change', address.value?.id)
-    return { address, visible, selectedAdd, confrimAdd, openAdd }
+    const AddressEdit = ref(null)
+    return { address, visible, selectedAdd, confrimAdd, openAdd, AddressEdit }
   }
 }
 </script>
