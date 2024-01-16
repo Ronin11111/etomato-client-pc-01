@@ -7,7 +7,7 @@
         <li><span>联系方式：</span>{{address.contact.replace(/^(\d{3})\d{4}(\d{4})$/,'$1****$2')}}</li>
         <li><span>收货地址：</span>{{address.fullLocation.replace(/ /g,'')}}{{address.address}}</li>
       </ul>
-      <a v-if="address" href="javascript:;">修改地址</a>
+      <a v-if="address" @click="AddressEdit.open(address)">修改地址</a>
     </div>
     <div class="action">
       <XtxButton @click="openAdd" class="btn">切换地址</XtxButton>
@@ -29,7 +29,7 @@
     </template>
   </XtxDialog>
   <!-- 收货地址添加编辑组件 -->
-  <AddressEdit ref="AddressEdit"></AddressEdit>
+  <AddressEdit @add-data="addList" ref="AddressEdit"></AddressEdit>
 </template>
 <script>
 import AddressEdit from './address-edit'
@@ -76,11 +76,28 @@ export default {
       address.value = selectedAdd.value
       emit('change', address.value?.id)
     }
+
+    // 添加数据，追加至列表中
+    const addList = (formDate) => {
+      const editAddress = props.list.find(item => item.id === formDate.id)
+      if (editAddress) {
+        // 修改地址
+        for (const key in editAddress) {
+          editAddress[key] = formDate[key]
+        }
+      } else {
+      // 添加地址
+      // 将数据进行克隆
+        const newAddress = JSON.stringify(FormData)
+        // eslint-disable-next-line vue/no-mutating-props
+        props.list.unshift(JSON.parse(newAddress))
+      }
+    }
     // 向父组件提交地址id值 =>?.即在赋值前先判断address中是否有值
     // address.value?.id <==>address.value&&address.value.id
     emit('change', address.value?.id)
     const AddressEdit = ref(null)
-    return { address, visible, selectedAdd, confrimAdd, openAdd, AddressEdit }
+    return { address, visible, selectedAdd, confrimAdd, openAdd, AddressEdit, addList }
   }
 }
 </script>
