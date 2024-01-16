@@ -67,7 +67,7 @@
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <XtxButton type="primary">提交订单</XtxButton>
+          <XtxButton @click="submitOrder" type="primary">提交订单</XtxButton>
         </div>
       </div>
     </div>
@@ -75,8 +75,10 @@
 </template>
 <script>
 import CheckoutAddress from './components/checkout-address'
-import { findCheckoutInfo } from '@/api/pay.js'
-import { ref } from 'vue'
+import Message from '@/components/library/message'
+import { findCheckoutInfo, createOrder } from '@/api/pay.js'
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'XtxPayCheckoutPage',
@@ -85,15 +87,33 @@ export default {
     const checkInfo = ref(null)
     findCheckoutInfo().then((data) => {
       checkInfo.value = data.result
+      orderInfo.goods = checkInfo.value.goods.map(({ skuId, count }) => ({ skuId, count }))
       console.log(checkInfo.value)
     })
     // 收货地址ID
-    const addressId = ref(null)
+    const orderInfo = reactive({
+      deliveryTimeType: 1,
+      payType: 1,
+      buyerMessage: '',
+      goods: [], // 商品信息
+      addressId: null // 地址信息
+    })
     const getAddress = (id) => {
       console.log(id)
-      addressId.value = id
+      orderInfo.addressId = id
     }
-    return { checkInfo, getAddress }
+    // 提交订单
+    const router = useRouter()
+    const submitOrder = () => {
+      if (!orderInfo.addressId) {
+        return Message({ text: '亲，请选择地址' })
+      }
+      createOrder(orderInfo).then((data) => {
+        Message({ type: 'success', text: '创建订单成功' })
+        router.push(`/member/pay/id=${data.result.id}`)
+      })
+    }
+    return { checkInfo, getAddress, submitOrder }
   }
 }
 </script>
